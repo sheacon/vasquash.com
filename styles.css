@@ -357,8 +357,8 @@ a:hover {
   inset: 0;
   z-index: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--collage-cols, 4), 1fr);
+  grid-template-rows: repeat(var(--collage-rows, 5), 1fr);
   gap: 4px;
   padding: 4px;
   overflow: hidden;

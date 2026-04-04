@@ -148,7 +148,17 @@
 
     shuffle(allImages);
 
-    var cardCount = 20; // 4x5 grid
+    // Calculate grid based on viewport to keep cards roughly square
+    var vw = container.offsetWidth;
+    var vh = container.offsetHeight;
+    var targetSize = Math.min(vw, vh) / 4; // aim for ~4 cells along the short side
+    var cols = Math.round(vw / targetSize);
+    var rows = Math.round(vh / targetSize);
+    cols = Math.max(cols, 2);
+    rows = Math.max(rows, 2);
+    container.style.setProperty('--collage-cols', cols);
+    container.style.setProperty('--collage-rows', rows);
+    var cardCount = cols * rows;
 
     // Assign initial images, cycling if needed
     var displayImages = [];
