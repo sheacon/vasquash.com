@@ -31,7 +31,9 @@ for f in "$SRC"/*; do
     continue
   fi
 
-  # Resize so the short side = 300, then center-crop to square
+  # Resize so the short side = 300, then crop to square
+  # Landscape: center-crop horizontally
+  # Portrait: crop from top to keep heads in frame
   if [ "$w" -gt "$h" ]; then
     sips --resampleHeight $SIZE -s formatOptions $QUALITY -s format jpeg "$f" --out "$DEST/${idx}.jpg" 2>/dev/null
     new_w=$(sips --getProperty pixelWidth "$DEST/${idx}.jpg" 2>/dev/null | tail -1 | awk '{print $2}')
@@ -39,9 +41,7 @@ for f in "$SRC"/*; do
     sips --cropToHeightWidth $SIZE $SIZE --cropOffset 0 $offset "$DEST/${idx}.jpg" 2>/dev/null
   else
     sips --resampleWidth $SIZE -s formatOptions $QUALITY -s format jpeg "$f" --out "$DEST/${idx}.jpg" 2>/dev/null
-    new_h=$(sips --getProperty pixelHeight "$DEST/${idx}.jpg" 2>/dev/null | tail -1 | awk '{print $2}')
-    offset=$(( (new_h - SIZE) / 2 ))
-    sips --cropToHeightWidth $SIZE $SIZE --cropOffset $offset 0 "$DEST/${idx}.jpg" 2>/dev/null
+    sips --cropToHeightWidth $SIZE $SIZE --cropOffset 0 0 "$DEST/${idx}.jpg" 2>/dev/null
   fi
 
   # Guarantee exact 300x300
