@@ -270,6 +270,18 @@ a:hover {
   color: var(--white);
 }
 
+.nav__link--donate {
+  background: var(--white);
+  color: var(--navy);
+  margin-left: 0.25rem;
+  font-weight: 700;
+}
+
+.nav__link--donate:hover {
+  background: var(--off-white);
+  color: var(--navy);
+}
+
 .nav__toggle {
   display: none;
   background: none;
@@ -884,7 +896,8 @@ a:hover {
     padding: 0.75rem 1.5rem;
   }
 
-  .nav__link--cta {
+  .nav__link--cta,
+  .nav__link--donate {
     margin-left: 0;
     margin-top: 0.5rem;
   }
