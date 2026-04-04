@@ -335,8 +335,8 @@ a:hover {
   inset: 0;
   z-index: 0;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 4px;
   padding: 4px;
   overflow: hidden;
