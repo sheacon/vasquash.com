@@ -179,6 +179,20 @@ a:hover {
   padding: 0.8rem 1.75rem;
 }
 
+.btn--disabled {
+  background: var(--gray-light);
+  color: var(--gray);
+  border-color: var(--gray-light);
+  cursor: default;
+}
+
+.btn--disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--gray-light);
+  color: var(--gray);
+}
+
 /* --- Navigation --- */
 .nav {
   position: fixed;
