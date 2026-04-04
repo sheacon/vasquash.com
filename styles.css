@@ -825,7 +825,7 @@ a:hover {
 
   /* Hero */
   .hero__logo {
-    max-width: 260px;
+    max-width: 75vw;
   }
 
   .hero__tagline {
