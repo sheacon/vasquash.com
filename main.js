@@ -103,4 +103,165 @@
       }
     });
   }
+  // --- Hero Collage ---
+  var COLLAGE_PATH = 'assets/collage/';
+  var FLIP_INTERVAL = 2500;
+  var FLIP_STAGGER = 800;
+  var FLIP_DURATION = 800;
+
+  function detectCollageImages(callback) {
+    // Probe sequential files (01.jpg, 02.jpg, ...) until one fails to load
+    var images = [];
+    var idx = 1;
+
+    function probe() {
+      var src = COLLAGE_PATH + (idx < 10 ? '0' + idx : idx) + '.jpg';
+      var img = new Image();
+      img.onload = function () {
+        images.push(src);
+        idx++;
+        probe();
+      };
+      img.onerror = function () {
+        callback(images);
+      };
+      img.src = src;
+    }
+
+    probe();
+  }
+
+  function initCollage(allImages) {
+    var container = document.getElementById('heroCollage');
+    if (!container || allImages.length === 0) return null;
+
+    // Fisher-Yates shuffle
+    function shuffle(arr) {
+      for (var j = arr.length - 1; j > 0; j--) {
+        var k = Math.floor(Math.random() * (j + 1));
+        var tmp = arr[j];
+        arr[j] = arr[k];
+        arr[k] = tmp;
+      }
+      return arr;
+    }
+
+    shuffle(allImages);
+
+    var cardCount = 36; // 6x6 grid
+
+    // Assign initial images, cycling if needed
+    var displayImages = [];
+    for (var i = 0; i < cardCount; i++) {
+      displayImages.push(allImages[i % allImages.length]);
+    }
+
+    var cards = [];
+    for (var i = 0; i < cardCount; i++) {
+      var card = document.createElement('div');
+      card.className = 'collage-card';
+
+      var inner = document.createElement('div');
+      inner.className = 'collage-card__inner';
+
+      var front = document.createElement('div');
+      front.className = 'collage-card__face collage-card__face--front';
+      var frontImg = document.createElement('img');
+      frontImg.src = displayImages[i];
+      frontImg.alt = '';
+      frontImg.loading = 'lazy';
+      front.appendChild(frontImg);
+
+      var back = document.createElement('div');
+      back.className = 'collage-card__face collage-card__face--back';
+      var backImg = document.createElement('img');
+      backImg.alt = '';
+      back.appendChild(backImg);
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+      container.appendChild(card);
+
+      cards.push({
+        el: card,
+        frontImg: frontImg,
+        backImg: backImg,
+        currentSrc: displayImages[i],
+        isFlipped: false
+      });
+    }
+
+    return { cards: cards, all: allImages };
+  }
+
+  function startCollageAnimation(state) {
+    if (!state || !state.cards.length) return;
+
+    var collageVisible = true;
+
+    // Pause flips when hero scrolls out of view
+    var heroEl = document.getElementById('hero');
+    if (heroEl && 'IntersectionObserver' in window) {
+      var visObs = new IntersectionObserver(function (entries) {
+        collageVisible = entries[0].isIntersecting;
+      }, { threshold: 0 });
+      visObs.observe(heroEl);
+    }
+
+    function getNextImage(currentSrc) {
+      var attempts = 0;
+      var next;
+      do {
+        next = state.all[Math.floor(Math.random() * state.all.length)];
+        attempts++;
+      } while (next === currentSrc && attempts < 10);
+      return next;
+    }
+
+    function flipRandomCard() {
+      if (!collageVisible) return;
+
+      var available = [];
+      for (var i = 0; i < state.cards.length; i++) {
+        if (!state.cards[i].isFlipped) available.push(i);
+      }
+      if (available.length === 0) return;
+
+      var idx = available[Math.floor(Math.random() * available.length)];
+      var card = state.cards[idx];
+
+      var nextSrc = getNextImage(card.currentSrc);
+      card.backImg.src = nextSrc;
+
+      card.el.classList.add('flipped');
+      card.isFlipped = true;
+
+      setTimeout(function () {
+        card.frontImg.src = nextSrc;
+        card.currentSrc = nextSrc;
+        card.el.classList.remove('flipped');
+        card.isFlipped = false;
+      }, FLIP_DURATION + 300);
+    }
+
+    function scheduleNext() {
+      var delay = FLIP_INTERVAL + (Math.random() * FLIP_STAGGER * 2 - FLIP_STAGGER);
+      setTimeout(function () {
+        flipRandomCard();
+        scheduleNext();
+      }, delay);
+    }
+
+    scheduleNext();
+  }
+
+  // Init collage, respecting reduced motion
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  detectCollageImages(function (allImages) {
+    var collageState = initCollage(allImages);
+    if (!prefersReducedMotion) {
+      startCollageAnimation(collageState);
+    }
+  });
 })();
