@@ -425,7 +425,7 @@ a:hover {
 }
 
 .about__text {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   line-height: 1.75;
   max-width: 820px;
   margin: 0 auto;
@@ -916,7 +916,7 @@ a:hover {
 
   /* About */
   .about__text {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   /* Section titles */
