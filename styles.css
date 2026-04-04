@@ -344,7 +344,6 @@ a:hover {
 
 .collage-card {
   position: relative;
-  aspect-ratio: 1;
   perspective: 600px;
   overflow: hidden;
 }
