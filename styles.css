@@ -484,6 +484,11 @@ a:hover {
   flex-direction: column;
 }
 
+.card__action {
+  margin-top: auto;
+  align-self: center;
+}
+
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
