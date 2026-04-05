@@ -34,6 +34,15 @@ Click **Add New Record** for each:
 | A | @ | 185.199.110.153 | 1 Hour |
 | A | @ | 185.199.111.153 | 1 Hour |
 
+### Add AAAA records (optional, for IPv6 support)
+
+| Type | Name | Value | TTL |
+|------|------|-------|-----|
+| AAAA | @ | 2606:50c0:8000::153 | 1 Hour |
+| AAAA | @ | 2606:50c0:8001::153 | 1 Hour |
+| AAAA | @ | 2606:50c0:8002::153 | 1 Hour |
+| AAAA | @ | 2606:50c0:8003::153 | 1 Hour |
+
 ### Add CNAME record (point www to GitHub)
 
 | Type | Name | Value | TTL |
@@ -60,6 +69,16 @@ Go to https://github.com/virginia-squash/virginia-squash.github.io/settings/page
 - "Enforce HTTPS" is checked (available once DNS is verified)
 
 GitHub will automatically provision a free TLS certificate.
+
+## 5. Verify the custom domain (recommended)
+
+To prevent domain takeover attacks, verify `vasquash.com` with the GitHub organization:
+
+1. Go to https://github.com/organizations/virginia-squash/settings/pages
+2. Click **Add a domain** and enter `vasquash.com`
+3. GitHub will provide a TXT record to add at GoDaddy (e.g. `_github-pages-challenge-virginia-squash.vasquash.com`)
+4. Add the TXT record in GoDaddy's DNS settings
+5. Return to GitHub and click **Verify**
 
 ## Updating the site
 
