@@ -109,26 +109,18 @@
   var FLIP_STAGGER = 800;
   var FLIP_DURATION = 800;
 
-  function detectCollageImages(callback) {
-    // Probe sequential files (01.jpg, 02.jpg, ...) until one fails to load
-    var images = [];
-    var idx = 1;
-
-    function probe() {
-      var src = COLLAGE_PATH + (idx < 10 ? '0' + idx : idx) + '.jpg';
-      var img = new Image();
-      img.onload = function () {
-        images.push(src);
-        idx++;
-        probe();
-      };
-      img.onerror = function () {
+  function loadCollageCount(callback) {
+    fetch(COLLAGE_PATH + 'count.txt')
+      .then(function (res) { return res.text(); })
+      .then(function (text) {
+        var count = parseInt(text.trim(), 10);
+        var images = [];
+        for (var i = 1; i <= count; i++) {
+          images.push(COLLAGE_PATH + (i < 10 ? '0' + i : i) + '.jpg');
+        }
         callback(images);
-      };
-      img.src = src;
-    }
-
-    probe();
+      })
+      .catch(function () { callback([]); });
   }
 
   function initCollage(allImages) {
@@ -202,6 +194,11 @@
       });
     }
 
+    // Fade in the collage
+    requestAnimationFrame(function () {
+      container.classList.add('loaded');
+    });
+
     return { cards: cards, all: allImages };
   }
 
@@ -268,7 +265,7 @@
 
   // Init collage, respecting reduced motion
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  detectCollageImages(function (allImages) {
+  loadCollageCount(function (allImages) {
     var collageState = initCollage(allImages);
     if (!prefersReducedMotion) {
       startCollageAnimation(collageState);

@@ -51,4 +51,6 @@ for f in "$SRC"/*; do
   i=$((i + 1))
 done
 
-echo "--- Done: $((i - 1)) images in $DEST/ ---"
+count=$((i - 1))
+echo "$count" > "$DEST/count.txt"
+echo "--- Done: $count images in $DEST/ ---"
